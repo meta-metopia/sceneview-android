@@ -1,4 +1,4 @@
-name: Upload release to Sonatype Staging Repository
+name: Upload release to GitHub Package
 
 # Run this workflow when a tag is pushed
 on:
@@ -24,13 +24,12 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Upload release to Sonatype Staging Repository
-        run: ./gradlew publishAllPublicationsToMavenCentralRepository --no-daemon --no-parallel
+      - name: Upload release to GitHub Package
+        run: ./gradlew publishMavenPublicationToGitHubPackagesRepository --no-daemon --no-parallel
         env:
-          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
-          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
+#          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
+#          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_PRIVATE_KEY }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}
-          #SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
-          #SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
-          #SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
+          TOKEN: ${{secrets.RELEASE_TOKEN}}
+          USERNAME: ${{secrets.GITHUB_ACTOR}}

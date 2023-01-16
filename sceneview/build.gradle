@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'filament-tools-plugin'
     id 'org.jetbrains.dokka'
+    id 'maven-publish'
 }
 
 if (project.properties['filamentPluginEnabled']?.toBoolean()) {
@@ -21,6 +22,26 @@ if (project.properties['filamentPluginEnabled']?.toBoolean()) {
 
 group = GROUP
 version = VERSION_NAME
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/meta-metopia/sceneview-android")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            afterEvaluate {
+                from components.release
+            }
+        }
+    }
+}
 
 android {
     namespace 'io.github.sceneview'
